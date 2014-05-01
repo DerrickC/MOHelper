@@ -1,0 +1,4 @@
+MOHelper
+========
+
+NSManagedObject helper
