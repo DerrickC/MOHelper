@@ -2,7 +2,7 @@
 //  NSManagedObject+Helper.h
 //
 //
-//  參考 from 武峯 江 on 12/6/23.
+//  參考 from Wuufone on 12/6/23.
 //  Created by Derrick on 2014/4/30.
 //
 //
