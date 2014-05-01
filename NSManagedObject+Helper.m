@@ -59,12 +59,12 @@
     return [self findBy:columnName value:value limit:0];
 }
 
-+ (id)findBy:(NSString *)columnName value:(id)value limit:(NSUInteger)maxValue
++ (id)findBy:(NSString *)columnName value:(id)value limit:(NSUInteger)max
 {
-    return [self findBy:columnName value:value limit:maxValue sortBy:nil ascending:NO];
+    return [self findBy:columnName value:value limit:max sortBy:nil ascending:NO];
 }
 
-+ (id)findBy:(NSString *)columnName value:(id)value limit:(NSUInteger)maxValue sortBy:(NSArray *)sortColumns ascending:(BOOL)ascending
++ (id)findBy:(NSString *)columnName value:(id)value limit:(NSUInteger)max sortBy:(NSArray *)sortColumns ascending:(BOOL)ascending
 {
     // *** create fetchRequest
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
@@ -94,7 +94,7 @@
     }
     [fetchRequest setSortDescriptors:sortDescriptors];
     [fetchRequest setFetchBatchSize:100];
-    [fetchRequest setFetchLimit:maxValue];
+    [fetchRequest setFetchLimit:max];
     
     NSFetchedResultsController *fetchedResultsController =
     [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest

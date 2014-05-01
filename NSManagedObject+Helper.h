@@ -16,8 +16,8 @@
 
 + (id)all;
 + (id)findBy:(NSString *)columnName value:(id)value;
-+ (id)findBy:(NSString *)columnName value:(id)value limit:(NSUInteger)maxValue;
-+ (id)findBy:(NSString *)columnName value:(id)value limit:(NSUInteger)maxValue sortBy:(NSArray *)sortColumns ascending:(BOOL)ascending;
++ (id)findBy:(NSString *)columnName value:(id)value limit:(NSUInteger)max;
++ (id)findBy:(NSString *)columnName value:(id)value limit:(NSUInteger)max sortBy:(NSArray *)sortColumns ascending:(BOOL)ascending;
 
 - (void)remove;
 
