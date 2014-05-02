@@ -16,6 +16,11 @@
 
 #import <CoreData/CoreData.h>
 
+@protocol MOHelperProtocol <NSObject>
+@property (nonatomic, retain) NSDate * createdAt;
+@property (nonatomic, retain) NSDate * updatedAt;
+@end
+
 @interface NSManagedObject (Helper)
 
 + (instancetype)createNew;

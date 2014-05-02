@@ -9,7 +9,11 @@
 #import "NSManagedObject+Helper.h"
 #import "AppDelegate.h"
 
-#define SELF_CLASS_STRING   NSStringFromClass([self class])
+#define SELF_CLASS_STRING                             NSStringFromClass([self class])
+
+#if !__has_feature(objc_arc)
+#error MOHelper is ARC only. Either turn on ARC for the project or use -fobjc-arc flag
+#endif
 
 @implementation NSManagedObject (Helper)
 
@@ -20,12 +24,18 @@
                                                object:nil];
 }
 
+#pragma mark - CRUD
+
 + (instancetype)createNew
 {
     NSManagedObjectContext *context = [self managedObjectContext];
     id managedObject = [NSEntityDescription insertNewObjectForEntityForName:SELF_CLASS_STRING
                                                      inManagedObjectContext:context];
-    [managedObject setValue:[NSDate date] forKey:@"createAt"];
+    if ([managedObject respondsToSelector:@selector(createdAt)]) {
+        [managedObject setValue:[NSDate date] forKey:@"createdAt"];
+    } else {
+        NSLog(@"\n*****************\n***** ERROR *****\n*****************\nmanaged object 沒有 createdAt 參數");
+    }
     
     return managedObject;
 }
@@ -53,8 +63,6 @@
     
     [self save];
 }
-
-#pragma mark - fetch
 
 + (id)all
 {
@@ -96,7 +104,7 @@
             NSLog(@"condition: %@", sortColumn);
         }
     } else {
-        NSSortDescriptor *sort = [[NSSortDescriptor alloc] initWithKey:@"createAt" ascending:ascending];
+        NSSortDescriptor *sort = [[NSSortDescriptor alloc] initWithKey:@"createdAt" ascending:ascending];
         [sortDescriptors addObject:sort];
     }
     [fetchRequest setSortDescriptors:sortDescriptors];
@@ -141,7 +149,12 @@
 - (void)setLastModified:(id)object
 {
     NSDate *nowDate = (NSDate *)object;
-    [self setValue:nowDate forKey:@"updateAt"];
+    
+    if ([self respondsToSelector:@selector(updatedAt)]) {
+        [self setValue:nowDate forKey:@"updatedAt"];
+    } else {
+        NSLog(@"\n*****************\n***** ERROR *****\n*****************\nmanaged object 沒有 updatedAt 參數");
+    }
 }
 
 @end
