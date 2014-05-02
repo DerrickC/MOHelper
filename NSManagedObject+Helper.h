@@ -7,6 +7,13 @@
 //
 //
 
+// === 使用說明 ===
+//
+// core data 的建立方式為 Xcode 預設的實作方式
+// 許多實作已經建立在 AppDelegate 裡面
+// Entity 則必須有兩個 column: createAt 和 updateAt
+
+
 #import <CoreData/CoreData.h>
 
 @interface NSManagedObject (Helper)

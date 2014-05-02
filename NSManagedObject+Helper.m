@@ -13,12 +13,19 @@
 
 @implementation NSManagedObject (Helper)
 
++ (void) load {
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(objectContextWillSave:)
+                                                 name:NSManagedObjectContextWillSaveNotification
+                                               object:nil];
+}
+
 + (instancetype)createNew
 {
     NSManagedObjectContext *context = [self managedObjectContext];
     id managedObject = [NSEntityDescription insertNewObjectForEntityForName:SELF_CLASS_STRING
                                                      inManagedObjectContext:context];
-    [managedObject setValue:[NSDate date] forKey:@"timestamp"];
+    [managedObject setValue:[NSDate date] forKey:@"createAt"];
     
     return managedObject;
 }
@@ -89,7 +96,7 @@
             NSLog(@"condition: %@", sortColumn);
         }
     } else {
-        NSSortDescriptor *sort = [[NSSortDescriptor alloc] initWithKey:@"timestamp" ascending:ascending];
+        NSSortDescriptor *sort = [[NSSortDescriptor alloc] initWithKey:@"createAt" ascending:ascending];
         [sortDescriptors addObject:sort];
     }
     [fetchRequest setSortDescriptors:sortDescriptors];
@@ -120,9 +127,21 @@
     return appDelegate.managedObjectContext;
 }
 
-- (void)didChangeValueForKey:(NSString *)key
++ (void)objectContextWillSave:(NSNotification *)notification
 {
-    
+    NSManagedObjectContext* context = [notification object];
+    NSSet* allModified = [context.insertedObjects setByAddingObjectsFromSet:context.updatedObjects];
+//    NSPredicate* predicate = [NSPredicate predicateWithFormat: @"self isKindOfClass: %@", [self class]];
+//    NSSet* modifiable = [allModified filteredSetUsingPredicate: predicate];
+//    [modifiable makeObjectsPerformSelector: @selector(setLastModified:) withObject: [NSDate date]];
+    [allModified makeObjectsPerformSelector:@selector(setLastModified:)
+                                 withObject:[NSDate date]];
+}
+
+- (void)setLastModified:(id)object
+{
+    NSDate *nowDate = (NSDate *)object;
+    [self setValue:nowDate forKey:@"updateAt"];
 }
 
 @end
