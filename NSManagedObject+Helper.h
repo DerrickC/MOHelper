@@ -11,7 +11,7 @@
 //
 // core data 的建立方式為 Xcode 預設的實作方式
 // 許多實作已經建立在 AppDelegate 裡面
-// Entity 則必須有兩個 column: createAt 和 updateAt
+// Entity 有兩個 column: createdAt 和 updatedAt
 
 
 #import <CoreData/CoreData.h>
@@ -26,10 +26,11 @@
 + (instancetype)createNew;
 + (void)save;
 
-+ (id)all;
-+ (id)findBy:(NSString *)columnName value:(id)value;
-+ (id)findBy:(NSString *)columnName value:(id)value limit:(NSUInteger)max;
-+ (id)findBy:(NSString *)columnName value:(id)value limit:(NSUInteger)max sortBy:(NSArray *)sortColumns ascending:(BOOL)ascending;
++ (instancetype)randomOne;
++ (NSArray *)all;
++ (NSArray *)findBy:(NSString *)columnName value:(id)value;
++ (NSArray *)findBy:(NSString *)columnName value:(id)value limit:(NSUInteger)max;
++ (NSArray *)findBy:(NSString *)columnName value:(id)value limit:(NSUInteger)max sortBy:(NSArray *)sortColumns ascending:(BOOL)ascending;
 
 - (void)remove;
 

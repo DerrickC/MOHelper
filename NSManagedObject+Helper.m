@@ -64,22 +64,46 @@
     [self save];
 }
 
-+ (id)all
++ (instancetype)randomOne
+{
+    // create fetchRequest
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription
+                                   entityForName:SELF_CLASS_STRING
+                                   inManagedObjectContext:[self managedObjectContext]];
+    [fetchRequest setEntity:entity];
+    
+    // random offset
+    NSError *error;
+    NSUInteger entityCount = [[self managedObjectContext] countForFetchRequest:fetchRequest
+                                                                           error:&error];
+    // Get random value between 0 ~ entityCount
+    int randomOffset = arc4random() % entityCount;
+    [fetchRequest setFetchLimit:1];
+    [fetchRequest setFetchOffset:randomOffset];
+    
+    // FETCH!
+    NSArray *results = [[self managedObjectContext] executeFetchRequest:fetchRequest error:&error];
+    
+    return [results firstObject];
+}
+
++ (NSArray *)all
 {
     return [self findBy:nil value:nil limit:0];
 }
 
-+ (id)findBy:(NSString *)columnName value:(id)value
++ (NSArray *)findBy:(NSString *)columnName value:(id)value
 {
     return [self findBy:columnName value:value limit:0];
 }
 
-+ (id)findBy:(NSString *)columnName value:(id)value limit:(NSUInteger)max
++ (NSArray *)findBy:(NSString *)columnName value:(id)value limit:(NSUInteger)max
 {
     return [self findBy:columnName value:value limit:max sortBy:nil ascending:NO];
 }
 
-+ (id)findBy:(NSString *)columnName value:(id)value limit:(NSUInteger)max sortBy:(NSArray *)sortColumns ascending:(BOOL)ascending
++ (NSArray *)findBy:(NSString *)columnName value:(id)value limit:(NSUInteger)max sortBy:(NSArray *)sortColumns ascending:(BOOL)ascending
 {
     // *** create fetchRequest
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
