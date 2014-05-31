@@ -26,7 +26,10 @@
 + (instancetype)createNew;
 + (void)save;
 
+
 + (instancetype)randomOne;
++ (NSArray *)random:(NSUInteger)count;
+
 + (NSArray *)all;
 + (NSArray *)findBy:(NSString *)columnName value:(id)value;
 + (NSArray *)findBy:(NSString *)columnName value:(id)value limit:(NSUInteger)max;

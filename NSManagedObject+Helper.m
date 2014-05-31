@@ -88,6 +88,45 @@
     return [results firstObject];
 }
 
++ (NSArray *)random:(NSUInteger)count
+{
+    NSMutableArray *randomObjects = [[NSMutableArray alloc] init];
+    
+    // create fetchRequest
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription
+                                   entityForName:SELF_CLASS_STRING
+                                   inManagedObjectContext:[self managedObjectContext]];
+    [fetchRequest setEntity:entity];
+    
+    // random offset
+    NSError *error;
+    NSUInteger entityCount = [[self managedObjectContext] countForFetchRequest:fetchRequest
+                                                                         error:&error];
+    
+    // random offsets
+    NSMutableArray *randomOffsets = [[NSMutableArray alloc] init];
+    while (randomOffsets.count < count) {
+        int randomOffset = arc4random() % entityCount;
+        NSNumber *offsetNumber = [NSNumber numberWithInt:randomOffset];
+        
+        if ([randomOffsets indexOfObject:offsetNumber] == NSNotFound) {
+            [randomOffsets addObject:offsetNumber];
+        }
+    }
+    
+    // pick 4 objects
+    for (NSNumber *offset in randomOffsets) {
+        [fetchRequest setFetchLimit:1];
+        [fetchRequest setFetchOffset:[offset integerValue]];
+        // FETCH!
+        NSArray *results = [[self managedObjectContext] executeFetchRequest:fetchRequest error:&error];
+        [randomObjects addObject:[results firstObject]];
+    }
+    
+    return randomObjects;
+}
+
 + (NSArray *)all
 {
     return [self findBy:nil value:nil limit:0];
